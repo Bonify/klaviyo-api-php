@@ -7,11 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 NOTE: For more granular API-specific changes, please see our [API Changelog](https://developers.klaviyo.com/en/docs/changelog_)
 
+## [9.0.1] - revision 2024-07-15
+
+### Added
+
+ - Forms API
+  - New `klaviyo->Forms` object with methods to get forms, form versions and relationships
+ - Webhooks API
+  - new `klaviyo->Webooks` class containing CRUD operations for webhooks
+
+### Changed
+ - `Profiles->subscribe()`
+  - added `historical_import` flag for importing historically consented profiles can now be optionally supplied in the payload for the Subscribe Profiles endpoint.
+  - When using this flag, a consented_at date must be provided and must be in the past.
+
+## [8.1.0] - revision 2024-06-15
+
+### Added
+  - Segments Api
+    - New create segment endpoint `$klaviyo->Segments->createSegment()`.
+    - New delete segment endpoint `$klaviyo->Segments->deleteSegment()`.
+    - Updated exisiting segments endpoints to include the segment definition
+    - For more information, see our [Segments API overview](https://developers.klaviyo.com/en/reference/segments_api_overview).
+
+  - Flows Api
+    - New delete flows endpoint `$klaviyo->Flows->deleteFlow()`
+   
 ## [8.0.0] - revision 2024-05-15
 
 ### Added
 
-  - Bulk Create Events API 
+  - Bulk Create Events API with 
 	- We have added support for creating events in bulk via the `$klaviyo->Events->bulkCreateEvents` method
 - Create multiple events for new and existing profiles and/or update profile properties in a single API call. For more information, see our [Events API overview](https://developers.klaviyo.com/en/reference/events_api_overview).
 
@@ -26,6 +52,7 @@ NOTE: For more granular API-specific changes, please see our [API Changelog](htt
       2. If the account does not have a sending number in the phone number’s region.
       3. If the phone number is in a region not supported by Klaviyo.
       4. If consented_at is set and the list or global setting is double opt-in.
+
 
 ## [7.1.2] - revision 2024-02-15
 
