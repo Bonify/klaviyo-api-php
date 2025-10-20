@@ -7,6 +7,157 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 NOTE: For more granular API-specific changes, please see our [API Changelog](https://developers.klaviyo.com/en/docs/changelog_)
 
+## [17.0.0] - revision 2025-10-15
+### Added
+#### Flow Actions API
+- Get flow actions, flow messages, flow action IDs, and more with the [Flow Actions API](https://developers.klaviyo.com/en/reference/get_flow_action).
+- Update flow actions within a flow, including associated message content, with the [Update Flow Action](https://developers.klaviyo.com/en/reference/update_flow_action) endpoint.
+
+### Updated
+#### Forms API
+- Retrieve a form and its definition with the [Forms API](https://developers.klaviyo.com/en/reference/forms_api_overview).
+- Use the [Create Form](https://developers.klaviyo.com/en/reference/create_form) endpoint to generate a new form by providing the status, A/B test preference, and name of the form.
+
+## [16.0.0] - revision 2025-07-15
+### Changed
+- Various changes to improve support for PHP 8
+- **Breaking:** Now requires PHP 8.1
+- **Breaking:** A `SplFileObject` is required for uploading an image; you can no longer use a raw string
+
+## [15.0.0] - revision 2025-07-15
+### Added
+#### Mapped Metrics API
+
+- Use the [Mapped Metrics API](https://developers.klaviyo.com/en/reference/get_mapped_metrics) to retrieve some or all mapped metrics in your Klaviyo account, or [update](https://developers.klaviyo.com/en/reference/update_mapped_metric) a mapped metric.
+- Get the [metric](https://developers.klaviyo.com/en/reference/get_metric_for_mapped_metric), [custom metric](https://developers.klaviyo.com/en/reference/get_custom_metric_for_mapped_metric), or associated metric IDs for a given mapped metric.
+
+#### Custom Objects API
+
+- Use the [Custom Objects API](https://developers.klaviyo.com/en/reference/custom_objects_api_overview) to ingest data records from other third-party sources into Klaviyo and retrieve all available data sources for an account.
+- Use ingested data records to create [custom objects](https://help.klaviyo.com/hc/en-us/articles/35105337172123) in a Klaviyo account.
+
+## [14.0.2] - revision 2025-04-15
+### Added
+- Added some PHPDoc type hints
+
+## [14.0.1] - revision 2025-04-15
+### Changed
+- Removed API revision from comment on files
+
+## [14.0.0] - revision 2025-04-15
+### Added
+#### Web Feeds API
+
+- Create, retrieve, update, and/or delete web feeds via the [Web Feeds API](https://developers.klaviyo.com/en/reference/web_feeds_api_overview).
+- Create universal content blocks referencing these web feeds with our [Universal Content API](https://developers.klaviyo.com/en/reference/universal_content_api_overview).
+
+#### Custom Metrics API
+
+- Create, retrieve, update, and/or delete custom metrics via the [Custom Metrics API](https://developers.klaviyo.com/en/reference/custom_metrics_api_overview).
+- Report on custom metric conversions in our Campaign and Flow [Reporting APIs](https://developers.klaviyo.com/en/reference/reporting_api_overview) (set the custom metric ID as the `conversion_metric_id`).
+
+> 🚧
+>
+> Standard accounts can only have 1 custom metric. Upgrade to Klaviyo's [Advanced KDP](https://www.klaviyo.com/products/advanced-cdp) or [Marketing Analytics](https://www.klaviyo.com/solutions/analytics) plan to create up to 50 custom metrics. To learn more about these plans, visit our [billing guide](https://help.klaviyo.com/hc/en-us/articles/115000976672).
+
+#### Get and Delete Push Token APIs
+
+- Retrieve and/or delete a given push token via [Get Push Token](https://developers.klaviyo.com/en/reference/get_push_token) and [Delete Push Token APIs](https://developers.klaviyo.com/en/reference/delete_push_token).
+- [Include](https://developers.klaviyo.com/en/docs/relationships_#the-include-query-parameter) push tokens on `GET /api/profiles`.
+- We've added relationship endpoints for both profiles and push tokens:
+  - Retrieve push tokens associated with a profile (`GET /api/profiles/{ID}/push-tokens`).
+  - Get IDs for push tokens associated with a profile (`GET /api/profiles/{ID}/relationships/push-tokens`).
+  - Retrieve the profile associated with a push token (`GET /api/push-tokens/{ID}/profile`).
+  - Get ID for the profile associated with a push token (`GET /api/push-tokens/{ID}/relationships/profile`).
+
+### Changed
+#### Campaigns API endpoints updated to support options for push notification badges
+
+- Badge count settings are supported on the "campaign-message" resource for push messages.
+  - The following options for incrementing badge count have been added to the Campaigns API: `increment_one` (increment by 1), `set_count` (increment by a given value), and `set_property` (increment by profile property).
+
+#### Optional AMP MIME-type field for Templates API
+
+- We've added support for creating and updating AMP versions of an email template through an optional `amp` field (under `attributes`) in our Create and Update Template APIs.
+- This field requires AMP Email to be enabled. Refer to our [AMP Email setup guide](https://developers.klaviyo.com/en/docs/send_amp_emails_in_klaviyo) for more information.
+
+## [13.0.0] - revision 2025-01-15
+### Added
+- Get and Update Reviews APIs
+  - Retrieve all reviews with `Reviews.getReviews` or return a review with a specified ID using the `Reviews.getReview` endpoint.
+  - Manage your reviews programmatically with the `Reviews.updateReview` endpoint, which allows you to change the status of a review, such as to reject or approve it. This endpoint modifies the moderation status of a review based on the provided review ID and status.
+- Get and Create Flows APIs
+  - Return a flow with the given flow ID using the `Flows.getFlow` endpoint.
+  - Create a new flow with the `Flows.createFlow` endpoint.
+- Campaigns API
+  - Manage the images for your campaigns with a new set of endpoints for the `Campaigns` API, including: `getImageForCampaignMessage`, `getImageIdForCampaignMessage`, and `updateImageForCampaignMessage`.
+### Changed
+- **Breaking:** Subscription endpoints required field
+  - Calls to `Profiles.bulkSubscribeProfiles` and `Profiles.unsubscribeProfiles` now require the `subscriptions` field, which grants or revokes consent for the indicated message types on the specified channels, such as email or sms.
+- **Breaking:** Campaigns API push notification support
+  - The Campaigns API now supports the push notification channel.
+  - Support for push notifications includes **significant changes** to the following endpoints: `getCampaigns`, `getCampaign`, `createCampaign`, `updateCampaign`, `createCampaignClone`, `getMessagesForCampaign`, `getCampaignMessage`, `updateCampaignMessage`, `getCampaignForCampaignMessage`, `getCampaignIdForCampaignMessage`.
+  - We recommend that you review the [Campaigns API Overview](https://developers.klaviyo.com/en/reference/campaigns_api_overview) for more detailed information about changes to the structure and responses of these endpoints.
+- **Breaking:** Pagination updates
+  - The `Flows.getMessagesForFlowAction` and `Flows.getActionIdForFlowMessage` endpoints have been updated from offset pagination to cursor pagination.
+- Create Template API
+  - The `Templates.createTemplate` endpoint now supports the creation of hybrid templates when `editorType` is `USER_DRAGGABLE` and hybrid template HTML is included.
+- Profiles API
+  - The following server-side APIs have been updated to an enhanced identity resolution processor to better follow the Klaviyo identity resolution identifier priority order.
+    - `Profiles.createProfile`
+    - `Profiles.updateProfile`
+
+## [12.1.0] - revision 2024-10-15
+### Changed
+- Updated REAME to use named arguments
+- Some methods have been renamed- the old methods are now deprecated aliases
+
+## [12.0.1] - revision 2024-10-15
+### Fixed
+- Updated [Uploading Image From File](https://github.com/klaviyo/klaviyo-api-php#uploading-image-from-file) section of README
+
+## [12.0.0] - revision 2024-10-15
+### Changed
+  - **Breaking:** Improved Retry Logic
+    - To address 429 status codes, we have modified the retry logic to use exponential backoff and the `Retry-After` header. This is now the default behavior.
+    - `wait_seconds` is now deprecated.
+
+## [11.0.0] - revision 2024-10-15
+### Added
+- Universal Content API
+  - Read, update, and delete universal content
+  - For more information, see our [Universal Content API overview](https://developers.klaviyo.com/en/reference/universal_content_api_overview)
+- Form Reporting API
+  - Query form performance
+  - For more information, see our [Reporting API overview](https://developers.klaviyo.com/en/reference/reporting_api_overview#forms)
+- Segment Reporting API
+  - Query segment growth data
+  - For more information, see our [Reporting API overview](https://developers.klaviyo.com/en/reference/reporting_api_overview#segments)
+- Reviews API
+  - Get and list reviews
+  - For more information, see our [Reviews API overview](https://developers.klaviyo.com/en/reference/reviews_api_overview)
+- Tracking Settings API
+  - Read and update the Tracking Settings for an account (Account -> Settings -> UTM Tracking in UI)
+  - For more information, see our [Tracking Settings API documentation](https://developers.klaviyo.com/en/reference/get_tracking_settings)
+- Metric Properties API
+  - Access the properties for a given metric (e.g. "Placed Order")
+  - For more information, see our [Metric Properties API documentation](https://developers.klaviyo.com/en/reference/get_metric_property)
+- Suppress/Unsuppress profile job APIs
+  - Monitor the status of jobs created by Suppress Profiles and Unsuppress Profiles requests
+  - For more information, see our [Suppress Profiles Job API documentation](https://developers.klaviyo.com/en/reference/get_bulk_suppress_profiles_job)
+
+### Changed
+- `Profiles.create_or_update_profile` has been updated to an enhanced identity resolution processor to better follow the Klaviyo identity resolution identifier priority order
+- Added support for `$locale` property for `Profiles`
+- Numerous methods have been renamed as part of a large renaming effort - the old methods are now deprecated aliases
+
+## [10.0.0] - revision 2024-07-15
+### Added
+- Added several method aliases based on previous operation IDs
+### Fixed
+- **Breaking**
+   - Removed incorrect `$id` parameter for Webhooks API functions
+
 ## [9.0.1] - revision 2024-07-15
 
 ### Added
@@ -32,7 +183,7 @@ NOTE: For more granular API-specific changes, please see our [API Changelog](htt
 
   - Flows Api
     - New delete flows endpoint `$klaviyo->Flows->deleteFlow()`
-   
+
 ## [8.0.0] - revision 2024-05-15
 
 ### Added
@@ -52,7 +203,6 @@ NOTE: For more granular API-specific changes, please see our [API Changelog](htt
       2. If the account does not have a sending number in the phone number’s region.
       3. If the phone number is in a region not supported by Klaviyo.
       4. If consented_at is set and the list or global setting is double opt-in.
-
 
 ## [7.1.2] - revision 2024-02-15
 

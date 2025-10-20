@@ -9,6 +9,7 @@ use KlaviyoAPI\API\AccountsApi;
 use KlaviyoAPI\API\CampaignsApi;
 use KlaviyoAPI\API\CatalogsApi;
 use KlaviyoAPI\API\CouponsApi;
+use KlaviyoAPI\API\CustomObjectsApi;
 use KlaviyoAPI\API\DataPrivacyApi;
 use KlaviyoAPI\API\EventsApi;
 use KlaviyoAPI\API\FlowsApi;
@@ -18,48 +19,87 @@ use KlaviyoAPI\API\ListsApi;
 use KlaviyoAPI\API\MetricsApi;
 use KlaviyoAPI\API\ProfilesApi;
 use KlaviyoAPI\API\ReportingApi;
+use KlaviyoAPI\API\ReviewsApi;
 use KlaviyoAPI\API\SegmentsApi;
 use KlaviyoAPI\API\TagsApi;
 use KlaviyoAPI\API\TemplatesApi;
+use KlaviyoAPI\API\TrackingSettingsApi;
+use KlaviyoAPI\API\WebFeedsApi;
 use KlaviyoAPI\API\WebhooksApi;
 
 
 
 
 class KlaviyoAPI {
+    /** @var string */
     public $api_key = "API_KEY";
+    /** @var int */
     public $wait_seconds;
+    /** @var int */
     public $num_retries;
+    /** @var Configuration */
     public $config;
+    /** @var array */
     public $guzzle_options;
+    /** @var Subclient<AccountsApi> */
     public $Accounts;
+    /** @var Subclient<CampaignsApi> */
     public $Campaigns;
+    /** @var Subclient<CatalogsApi> */
     public $Catalogs;
+    /** @var Subclient<CouponsApi> */
     public $Coupons;
+    /** @var Subclient<CustomObjectsApi> */
+    public $CustomObjects;
+    /** @var Subclient<DataPrivacyApi> */
     public $DataPrivacy;
+    /** @var Subclient<EventsApi> */
     public $Events;
+    /** @var Subclient<FlowsApi> */
     public $Flows;
+    /** @var Subclient<FormsApi> */
     public $Forms;
+    /** @var Subclient<ImagesApi> */
     public $Images;
+    /** @var Subclient<ListsApi> */
     public $Lists;
+    /** @var Subclient<MetricsApi> */
     public $Metrics;
+    /** @var Subclient<ProfilesApi> */
     public $Profiles;
+    /** @var Subclient<ReportingApi> */
     public $Reporting;
+    /** @var Subclient<ReviewsApi> */
+    public $Reviews;
+    /** @var Subclient<SegmentsApi> */
     public $Segments;
+    /** @var Subclient<TagsApi> */
     public $Tags;
+    /** @var Subclient<TemplatesApi> */
     public $Templates;
+    /** @var Subclient<TrackingSettingsApi> */
+    public $TrackingSettings;
+    /** @var Subclient<WebFeedsApi> */
+    public $WebFeeds;
+    /** @var Subclient<WebhooksApi> */
     public $Webhooks;
     
 
-
-    public function __construct($api_key, $num_retries = 3, $wait_seconds = 3, $guzzle_options = [], $user_agent_suffix = "") {
+    /**
+     * @param string $api_key
+     * @param int $num_retries
+     * @param ?int $wait_seconds
+     * @param array $guzzle_options
+     * @param string $user_agent_suffix
+     */
+    public function __construct($api_key, $num_retries = 3, $wait_seconds = null, $guzzle_options = [], $user_agent_suffix = "") {
 
         if (gettype($num_retries) == 'NULL'){
             $num_retries = 3;
         } 
 
-        if (gettype($wait_seconds) == 'NULL'){
-            $wait_seconds = 3;
+        if ($wait_seconds !== null){
+            trigger_error("The 'wait_seconds' parameter is deprecated and will be removed in a future version. Please remove this to enable exponential backoff for retry intervals.", E_USER_WARNING);
         } 
 
         $this->api_key = $api_key;
@@ -94,6 +134,12 @@ class KlaviyoAPI {
         
         $this->Coupons = new Subclient(
                 new CouponsApi(new GuzzleClient($this->guzzle_options),$this->config),
+                $wait_seconds = $this->wait_seconds,
+                $num_retries = $this->num_retries,
+            );
+        
+        $this->CustomObjects = new Subclient(
+                new CustomObjectsApi(new GuzzleClient($this->guzzle_options),$this->config),
                 $wait_seconds = $this->wait_seconds,
                 $num_retries = $this->num_retries,
             );
@@ -152,6 +198,12 @@ class KlaviyoAPI {
                 $num_retries = $this->num_retries,
             );
         
+        $this->Reviews = new Subclient(
+                new ReviewsApi(new GuzzleClient($this->guzzle_options),$this->config),
+                $wait_seconds = $this->wait_seconds,
+                $num_retries = $this->num_retries,
+            );
+        
         $this->Segments = new Subclient(
                 new SegmentsApi(new GuzzleClient($this->guzzle_options),$this->config),
                 $wait_seconds = $this->wait_seconds,
@@ -166,6 +218,18 @@ class KlaviyoAPI {
         
         $this->Templates = new Subclient(
                 new TemplatesApi(new GuzzleClient($this->guzzle_options),$this->config),
+                $wait_seconds = $this->wait_seconds,
+                $num_retries = $this->num_retries,
+            );
+        
+        $this->TrackingSettings = new Subclient(
+                new TrackingSettingsApi(new GuzzleClient($this->guzzle_options),$this->config),
+                $wait_seconds = $this->wait_seconds,
+                $num_retries = $this->num_retries,
+            );
+        
+        $this->WebFeeds = new Subclient(
+                new WebFeedsApi(new GuzzleClient($this->guzzle_options),$this->config),
                 $wait_seconds = $this->wait_seconds,
                 $num_retries = $this->num_retries,
             );
